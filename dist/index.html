@@ -3,7 +3,7 @@
   <title>WebSocket Test</title>
   <script language="javascript" type="text/javascript">
 
-  var wsUri = "wss://echo.websocket.org/";
+  var wsUri = "ws://node-red.insoprojects.nl:8080/";
   var output;
 
   function init()
@@ -35,7 +35,6 @@
   function onMessage(evt)
   {
     writeToScreen('<span style="color: blue;">RESPONSE: ' + evt.data+'</span>');
-    websocket.close();
   }
 
   function onError(evt)
