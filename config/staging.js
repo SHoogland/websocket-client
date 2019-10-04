@@ -1,4 +1,4 @@
 module.exports = {
 	env: 'staging',
-	api: 'https://staging.api.example.com/wp-json'
+	api: 'https://node-red.insoprojects.nl'
 };

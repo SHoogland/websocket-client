@@ -1,4 +1,4 @@
 module.exports = {
 	env: 'production',
-	api: 'https://api.example.com/wp-json'
+	api: 'https://node-red.insoprojects.nl'
 };
