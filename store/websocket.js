@@ -2,13 +2,13 @@ let websocket;
 const wsUri = 'wss://node-red.insoprojects.nl:8080/';
 
 export const state = () => ({
-	messages: [],
+	message: '',
 	websocketIsOn: false
 });
 
 export const mutations = {
-	addMessage(state, message) {
-		state.messages.push(message);
+	setMessage(state, message) {
+		state.message = message;
 	},
 	websocketOn(state, value) {
 		state.websocketIsOn = value;
@@ -34,12 +34,17 @@ export const actions = {
 	},
 	onClose({ dispatch }) {
 		console.log('closed');
-		setTimeout(function () {
+		setTimeout(function() {
 			dispatch('startWebSocket');
 		}, 2000);
 	},
-	onMessage({ commit }) {
-		commit('addMessage', 'message');
+	onMessage({ commit, dispatch }, evt) {
+		console.log(evt);
+		if (evt.data.indexOf('new_build') > -1) {
+			dispatch('builds/getBuild', evt.data, { root: true });
+		} else {
+			commit('setMessage', evt.data);
+		}
 	},
 	onError() {
 		console.log('error');
