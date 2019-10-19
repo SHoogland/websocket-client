@@ -2,6 +2,7 @@
 	<ul>
 		<li v-for="(buildEvent, key) in buildEvents" :key="key">
 			{{ buildEvent.type }}
+			<pre>{{ buildEvent }}</pre>
 		</li>
 	</ul>
 </template>
