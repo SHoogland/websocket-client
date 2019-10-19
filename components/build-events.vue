@@ -3,23 +3,23 @@
 		<h5 v-if="statusses.length">
 			Statusses
 		</h5>
-		<li v-for="(status, key) in statusses" :key="key">
+		<li v-for="(status, key) in statusses" :key="'status' + key">
 			{{ status.message.sender }}<br />
 			{{ status.message.description }}<br />
 			{{ status.prettyTime }}
 		</li>
-		<h5 v-if="statusses.length">
+		<h5 v-if="checkRuns.length">
 			CheckRuns
 		</h5>
-		<li v-for="(checkRun, key) in checkRuns" :key="key">
+		<li v-for="(checkRun, key) in checkRuns" :key="'checkRun' + key">
 			{{ checkRun.type }}<br />
 			{{ checkRun.prettyTime }}
 			<!-- <pre>{{checkRun}}</pre> -->
 		</li>
-		<h5 v-if="statusses.length">
+		<h5 v-if="checkSuites.length">
 			CheckSuites
 		</h5>
-		<li v-for="(checkSuite, key) in checkSuites" :key="key">
+		<li v-for="(checkSuite, key) in checkSuites" :key="'checkSuite' + key">
 			{{ checkSuite.type }}<br />
 			{{ checkSuite.prettyTime }}
 		</li>
