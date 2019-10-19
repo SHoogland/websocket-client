@@ -12,9 +12,11 @@
 			CheckRuns
 		</h5>
 		<li v-for="(checkRun, key) in checkRuns" :key="'checkRun' + key">
-			{{ checkRun.type }}<br />
+			{{ checkRun.message.appName }}<br />
+			Check run <strong>{{ checkRun.message.name }}</strong> {{ checkRun.message.action }}<br />
 			{{ checkRun.prettyTime }}
-			<!-- <pre>{{checkRun}}</pre> -->
+			<span v-if="checkRun.message.action === 'completed'"><br />result: {{ checkRun.message.conclusion }}</span>
+			<!-- <pre>{{ checkRun }}</pre> -->
 		</li>
 		<h5 v-if="checkSuites.length">
 			CheckSuites
@@ -80,6 +82,7 @@ export default {
 						this.statusses.push(buildEvent);
 						break;
 					case 'check_run':
+						buildEvent.message = JSON.parse(buildEvent.message);
 						this.checkRuns.push(buildEvent);
 						break;
 					case 'check_suite':
