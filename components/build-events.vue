@@ -1,14 +1,35 @@
 <template>
 	<ul>
-		<li v-for="(buildEvent, key) in buildEvents" :key="key">
-			{{ buildEvent.type }}
-			<pre>{{ buildEvent }}</pre>
+		<h5 v-if="statusses.length">
+			Statusses
+		</h5>
+		<li v-for="(status, key) in statusses" :key="key">
+			{{ status.message.sender }}<br />
+			{{ status.message.description }}<br />
+			{{ status.prettyTime }}
+		</li>
+		<h5 v-if="statusses.length">
+			CheckRuns
+		</h5>
+		<li v-for="(checkRun, key) in checkRuns" :key="key">
+			{{ checkRun.type }}<br />
+			{{ checkRun.prettyTime }}
+			<!-- <pre>{{checkRun}}</pre> -->
+		</li>
+		<h5 v-if="statusses.length">
+			CheckSuites
+		</h5>
+		<li v-for="(checkSuite, key) in checkSuites" :key="key">
+			{{ checkSuite.type }}<br />
+			{{ checkSuite.prettyTime }}
 		</li>
 	</ul>
 </template>
 
 <script>
 import { mapState } from 'vuex';
+import { orderBy } from 'lodash';
+import moment from 'moment';
 
 export default {
 	props: {
@@ -21,7 +42,9 @@ export default {
 	},
 	data: function() {
 		return {
-			buildEvents: []
+			checkRuns: [],
+			checkSuites: [],
+			statusses: []
 		};
 	},
 	computed: mapState({
@@ -45,7 +68,31 @@ export default {
 				method: 'get',
 				url: 'build?id=' + this.buildId
 			});
-			this.buildEvents = res.data;
+			this.checkRuns = [];
+			this.checkSuites = [];
+			this.statusses = [];
+			for (let i = 0; i < res.data.length; i++) {
+				const buildEvent = res.data[i];
+				buildEvent.prettyTime = moment(buildEvent.timestamp).format('hh:mm:ss');
+				switch (buildEvent.type) {
+					case 'status':
+						buildEvent.message = JSON.parse(buildEvent.message);
+						this.statusses.push(buildEvent);
+						break;
+					case 'check_run':
+						this.checkRuns.push(buildEvent);
+						break;
+					case 'check_suite':
+						this.checkSuites.push(buildEvent);
+						break;
+					default:
+						console.log('unknown type', buildEvent);
+						break;
+				}
+			}
+			this.statusses = orderBy(this.statusses, ['timestamp'], ['asc']);
+			this.checkRuns = orderBy(this.checkRuns, ['timestamp'], ['asc']);
+			this.checkSuites = orderBy(this.checkSuites, ['timestamp'], ['asc']);
 		}
 	}
 };
@@ -54,5 +101,6 @@ export default {
 <style lang="scss" scoped>
 li {
 	display: list-item;
+	border-bottom: 1px solid black;
 }
 </style>
