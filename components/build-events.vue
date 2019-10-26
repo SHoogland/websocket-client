@@ -29,7 +29,6 @@
 </template>
 
 <script>
-import { mapState } from 'vuex';
 import { orderBy } from 'lodash';
 import moment from 'moment';
 
@@ -49,17 +48,7 @@ export default {
 			statusses: []
 		};
 	},
-	computed: mapState({
-		websocketMessage: (state) => state.websocket.message
-	}),
-	watch: {
-		websocketMessage(val) {
-			if (val.indexOf('build_id_' + this.buildId) > -1) {
-				this.getBuildEvents();
-			}
-		}
-	},
-	async created() {
+	created() {
 		if (this.buildId > 0) {
 			this.getBuildEvents();
 		}
@@ -70,12 +59,13 @@ export default {
 				method: 'get',
 				url: 'build?id=' + this.buildId
 			});
+			console.log(res);
 			this.checkRuns = [];
 			this.checkSuites = [];
 			this.statusses = [];
 			for (let i = 0; i < res.data.length; i++) {
 				const buildEvent = res.data[i];
-				buildEvent.prettyTime = moment(buildEvent.timestamp).format('hh:mm:ss');
+				buildEvent.prettyTime = moment(buildEvent.timestamp).format('HH:mm:ss');
 				switch (buildEvent.type) {
 					case 'status':
 						buildEvent.message = JSON.parse(buildEvent.message);

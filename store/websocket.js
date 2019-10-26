@@ -39,11 +39,11 @@ export const actions = {
 		}, 2000);
 	},
 	onMessage({ commit, dispatch }, evt) {
-		console.log(evt);
+		commit('setMessage', 'fissa');
 		if (evt.data.indexOf('new_build') > -1) {
 			dispatch('builds/getBuild', evt.data, { root: true });
-		} else {
-			commit('setMessage', evt.data);
+		} else if (evt.data.indexOf('build_id_') > -1) {
+			dispatch('builds/updateBuild', evt.data, { root: true });
 		}
 	},
 	onError() {
